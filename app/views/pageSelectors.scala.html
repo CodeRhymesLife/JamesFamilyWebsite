@@ -1,0 +1,15 @@
+@(owner: String)
+
+@owner match {
+	case "Ryan" => {
+		<ul class="pageSelector">
+		    <li><a href="#">Danielle</a></li>
+		    <li><a href="#">Family</a></li>
+		    <li><a href="#">Education</a></li>
+		    <li><a href="@routes.Ryan.music">Music</a></li>
+		    <li><a href="#">Cats</a></li>
+		</ul>
+	}
+	
+	case _ => {}
+}
