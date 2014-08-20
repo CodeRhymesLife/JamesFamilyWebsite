@@ -1,6 +1,8 @@
 logs
 project/project
 project/target
+public/elm/buildjs~
+public/elm/cache
 target
 tmp
 .history

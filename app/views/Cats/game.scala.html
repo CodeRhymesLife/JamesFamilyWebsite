@@ -1,3 +1,9 @@
-@catsMain("Game") {
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/elm-runtime.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.at("javascripts/bouncingBall.js")" type="text/javascript"></script>
+}
+
+@catsMain("Game", scripts) {
     <div>Game goes here</div>
+    <script type="text/javascript">Elm.fullscreen(Elm.Main)</script><noscript></noscript>
 }

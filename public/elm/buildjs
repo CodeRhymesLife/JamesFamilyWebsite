@@ -1,0 +1,10 @@
+#!/bin/bash
+
+JAVASCRIPTSDIR="../javascripts"
+
+echo "Building js files from elm files"
+elm -o -b=$JAVASCRIPTSDIR *.elm
+
+echo "Copying elm runtime to javascript dir"
+ELMRUNTIME=$(elm -g)
+cp $ELMRUNTIME $JAVASCRIPTSDIR
