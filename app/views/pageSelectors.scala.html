@@ -7,9 +7,17 @@
 		    <li><a href="#">Family</a></li>
 		    <li><a href="#">Education</a></li>
 		    <li><a href="@routes.Ryan.music">Music</a></li>
-		    <li><a href="#">Cats</a></li>
+		    <li><a href="@routes.Cats.index">Cats</a></li>
 		</ul>
 	}
 	
+	case "Cats" => {
+		<ul class="pageSelector">
+		    <li><a href="#">Felix (Simon)</a></li>
+		    <li><a href="#">Quinn</a></li>
+		    <li><a href="@routes.Cats.game">Game</a></li>
+		</ul>
+	}
+
 	case _ => {}
 }
