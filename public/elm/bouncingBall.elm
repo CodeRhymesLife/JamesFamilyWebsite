@@ -5,29 +5,25 @@ import Window
  
 -- Inputs
 
-type Input = { space:Bool, dir:Int, delta:Time }
+type Input = { space:Bool, dir:Int, delta:Time, dim:(Int,Int) }
 
 delta = inSeconds <~ fps 35
 
 input = sampleOn delta (Input <~ Keyboard.space
-
                                ~ lift .y Keyboard.arrows
-
-                               ~ delta)
-                    
+                               ~ delta
+                               ~ Window.dimensions)
 
 -- Model
 
-(gameWidth,gameHeight) = (600,400)
-(halfWidth,halfHeight) = (300,200)
-
 data State = Play | Pause
 
+type Dimensions = { width:Float, height:Float }
 type Ball = { x:Float, y:Float, vx:Float, vy:Float }
-type Game = { state:State, ball:Ball }
+type Game = { state:State, ball:Ball, dimensions:Dimensions}
 
 defaultGame : Game
-defaultGame = { state = Pause, ball = { x=0, y=0, vx=200, vy=200 }}
+defaultGame = { state = Pause, ball = { x=0, y=0, vx=800, vy=800 }, dimensions = { width = 1200, height = 800 } }
 
 
 -- Updates
@@ -42,19 +38,22 @@ stepV v lowerCollision upperCollision =
      | upperCollision -> 0 - abs v
      | otherwise      -> v
 
-stepBall : Time -> Ball -> Ball
-stepBall t ({x,y,vx,vy} as ball) =
-  stepObj t { ball | vx <- stepV vx (x < wallMargin-halfWidth) (x > halfWidth-wallMargin) ,
-      vy <- stepV vy (y < wallMargin-halfHeight) (y > halfHeight-wallMargin) }
+stepBall : Time -> (Int,Int) -> Ball -> Ball
+stepBall t (w,h) ({x,y,vx,vy} as ball) =
+  let (halfWidth,halfHeight) = ((toFloat w)/2, (toFloat h)/2)
+  in stepObj t { ball | vx <- stepV vx (x < wallMargin-halfWidth) (x > halfWidth-wallMargin) ,
+         vy <- stepV vy (y < wallMargin-halfHeight) (y > halfHeight-wallMargin) }
+
 
 stepGame : Input -> Game -> Game
-stepGame {space,dir,delta} ({state,ball} as game) =
-  { game | state  <- if | space && state == Pause    -> Play
+stepGame {space,dir,delta,dim} ({state,ball,dimensions} as game) =
+  let (w,h) = dim
+  in { game| state  <- if | space && state == Pause    -> Play
                         | space && state == Play     -> Pause
                         | otherwise        -> state
          , ball   <- if state == Pause then ball else
-                         stepBall delta ball }
- 
+                         stepBall delta dim ball
+         , dimensions <- { dimensions | width <- toFloat w, height <- toFloat h } }
 
 gameState = foldp stepGame defaultGame input
 
@@ -71,12 +70,12 @@ make obj shape =
           |> move (obj.x,obj.y)
 
 display : (Int,Int) -> Game -> Element
-display (w,h) {state,ball} =
-  container w h middle <| collage gameWidth gameHeight
-       [ rect gameWidth gameHeight |> filled pongGreen
+display (w,h) {state,ball,dimensions} =
+  container w h middle <| collage w h
+       [ rect dimensions.width dimensions.height |> filled pongGreen
        , oval 15 15 |> make ball
        , toForm (if state == Play then spacer 1 1 else txt id msg)
-           |> move (0, 40 - gameHeight/2)
+           |> move (0, 40 - dimensions.height/2)
        ]
 
 main = lift2 display Window.dimensions gameState

@@ -64,9 +64,46 @@ Elm.Main.make = function (_elm) {
       }();
    });
    var wallMargin = 7;
-   var Game = F2(function (a,b) {
+   var stepBall = F3(function (t,
+   _v2,
+   _v3) {
+      return function () {
+         return function () {
+            switch (_v2.ctor)
+            {case "_Tuple2":
+               return function () {
+                    var $ = {ctor: "_Tuple2"
+                            ,_0: Basics.toFloat(_v2._0) / 2
+                            ,_1: Basics.toFloat(_v2._1) / 2},
+                    halfWidth = $._0,
+                    halfHeight = $._1;
+                    return A2(stepObj,
+                    t,
+                    _U.replace([["vx"
+                                ,A3(stepV,
+                                _v3.vx,
+                                _U.cmp(_v3.x,
+                                wallMargin - halfWidth) < 0,
+                                _U.cmp(_v3.x,
+                                halfWidth - wallMargin) > 0)]
+                               ,["vy"
+                                ,A3(stepV,
+                                _v3.vy,
+                                _U.cmp(_v3.y,
+                                wallMargin - halfHeight) < 0,
+                                _U.cmp(_v3.y,
+                                halfHeight - wallMargin) > 0)]],
+                    _v3));
+                 }();}
+            _E.Case($moduleName,
+            "between lines 43 and 45");
+         }();
+      }();
+   });
+   var Game = F3(function (a,b,c) {
       return {_: {}
              ,ball: b
+             ,dimensions: c
              ,state: a};
    });
    var Ball = F4(function (a,
@@ -79,108 +116,99 @@ Elm.Main.make = function (_elm) {
              ,x: a
              ,y: b};
    });
+   var Dimensions = F2(function (a,
+   b) {
+      return {_: {}
+             ,height: b
+             ,width: a};
+   });
    var Pause = {ctor: "Pause"};
    var defaultGame = {_: {}
                      ,ball: {_: {}
-                            ,vx: 200
-                            ,vy: 200
+                            ,vx: 800
+                            ,vy: 800
                             ,x: 0
                             ,y: 0}
+                     ,dimensions: {_: {}
+                                  ,height: 800
+                                  ,width: 1200}
                      ,state: Pause};
    var Play = {ctor: "Play"};
-   var $ = {ctor: "_Tuple2"
-           ,_0: 300
-           ,_1: 200},
-   halfWidth = $._0,
-   halfHeight = $._1;
-   var stepBall = F2(function (t,
-   _v2) {
-      return function () {
-         return A2(stepObj,
-         t,
-         _U.replace([["vx"
-                     ,A3(stepV,
-                     _v2.vx,
-                     _U.cmp(_v2.x,
-                     wallMargin - halfWidth) < 0,
-                     _U.cmp(_v2.x,
-                     halfWidth - wallMargin) > 0)]
-                    ,["vy"
-                     ,A3(stepV,
-                     _v2.vy,
-                     _U.cmp(_v2.y,
-                     wallMargin - halfHeight) < 0,
-                     _U.cmp(_v2.y,
-                     halfHeight - wallMargin) > 0)]],
-         _v2));
-      }();
-   });
-   var stepGame = F2(function (_v4,
-   _v5) {
-      return function () {
-         return function () {
-            return _U.replace([["state"
-                               ,_v4.space && _U.eq(_v5.state,
-                               Pause) ? Play : _v4.space && _U.eq(_v5.state,
-                               Play) ? Pause : _v5.state]
-                              ,["ball"
-                               ,_U.eq(_v5.state,
-                               Pause) ? _v5.ball : A2(stepBall,
-                               _v4.delta,
-                               _v5.ball)]],
-            _v5);
-         }();
-      }();
-   });
-   var $ = {ctor: "_Tuple2"
-           ,_0: 600
-           ,_1: 400},
-   gameWidth = $._0,
-   gameHeight = $._1;
-   var display = F2(function (_v8,
+   var stepGame = F2(function (_v8,
    _v9) {
       return function () {
          return function () {
-            switch (_v8.ctor)
+            return function () {
+               var $ = _v8.dim,
+               w = $._0,
+               h = $._1;
+               return _U.replace([["state"
+                                  ,_v8.space && _U.eq(_v9.state,
+                                  Pause) ? Play : _v8.space && _U.eq(_v9.state,
+                                  Play) ? Pause : _v9.state]
+                                 ,["ball"
+                                  ,_U.eq(_v9.state,
+                                  Pause) ? _v9.ball : A3(stepBall,
+                                  _v8.delta,
+                                  _v8.dim,
+                                  _v9.ball)]
+                                 ,["dimensions"
+                                  ,_U.replace([["width"
+                                               ,Basics.toFloat(w)]
+                                              ,["height",Basics.toFloat(h)]],
+                                  _v9.dimensions)]],
+               _v9);
+            }();
+         }();
+      }();
+   });
+   var display = F2(function (_v12,
+   _v13) {
+      return function () {
+         return function () {
+            switch (_v12.ctor)
             {case "_Tuple2":
                return A3(Graphics.Element.container,
-                 _v8._0,
-                 _v8._1,
+                 _v12._0,
+                 _v12._1,
                  Graphics.Element.middle)(A3(Graphics.Collage.collage,
-                 gameWidth,
-                 gameHeight,
+                 _v12._0,
+                 _v12._1,
                  _L.fromArray([Graphics.Collage.filled(pongGreen)(A2(Graphics.Collage.rect,
-                              gameWidth,
-                              gameHeight))
-                              ,make(_v9.ball)(A2(Graphics.Collage.oval,
+                              _v13.dimensions.width,
+                              _v13.dimensions.height))
+                              ,make(_v13.ball)(A2(Graphics.Collage.oval,
                               15,
                               15))
                               ,Graphics.Collage.move({ctor: "_Tuple2"
                                                      ,_0: 0
-                                                     ,_1: 40 - gameHeight / 2})(Graphics.Collage.toForm(_U.eq(_v9.state,
+                                                     ,_1: 40 - _v13.dimensions.height / 2})(Graphics.Collage.toForm(_U.eq(_v13.state,
                               Play) ? A2(Graphics.Element.spacer,
                               1,
                               1) : A2(txt,
                               Basics.id,
                               msg)))])));}
             _E.Case($moduleName,
-            "between lines 75 and 80");
+            "between lines 74 and 79");
          }();
       }();
    });
    var delta = A2(Signal._op["<~"],
    Time.inSeconds,
    Time.fps(35));
-   var Input = F3(function (a,
+   var Input = F4(function (a,
    b,
-   c) {
+   c,
+   d) {
       return {_: {}
              ,delta: c
+             ,dim: d
              ,dir: b
              ,space: a};
    });
    var input = A2(Signal.sampleOn,
    delta,
+   A2(Signal._op["~"],
    A2(Signal._op["~"],
    A2(Signal._op["~"],
    A2(Signal._op["<~"],
@@ -191,7 +219,8 @@ Elm.Main.make = function (_elm) {
       return _.y;
    },
    Keyboard.arrows)),
-   delta));
+   delta),
+   Window.dimensions));
    var gameState = A3(Signal.foldp,
    stepGame,
    defaultGame,
@@ -203,10 +232,6 @@ Elm.Main.make = function (_elm) {
    _elm.Main.values = {_op: _op
                       ,delta: delta
                       ,input: input
-                      ,gameHeight: gameHeight
-                      ,gameWidth: gameWidth
-                      ,halfHeight: halfHeight
-                      ,halfWidth: halfWidth
                       ,defaultGame: defaultGame
                       ,wallMargin: wallMargin
                       ,stepObj: stepObj
@@ -224,6 +249,7 @@ Elm.Main.make = function (_elm) {
                       ,Play: Play
                       ,Pause: Pause
                       ,Input: Input
+                      ,Dimensions: Dimensions
                       ,Ball: Ball
                       ,Game: Game};
    return _elm.Main.values;
