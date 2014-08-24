@@ -1,4 +1,34 @@
-.soundCloudPlaylist{
-	width: 600px;
-	height: 400px;
+@font-face {
+	font-family: MusiSync;
+    src: url(../../fonts/MusiSync.ttf);
+    font-weight:400;
+}
+
+h1 {
+	margin: 0;
+	text-align: center;
+    margin-bottom: 40px;
+    
+    font-family: MusiSync;
+    font-size: 100px;
+}
+
+.pageBackground {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	word-wrap: break-word;
+	opacity: 0.1;
+	overflow: hidden;
+	
+	font-family: MusiSync;
+	font-size: 50px;
+	
+	z-index: -1000
+}
+
+.soundCloudPlaylist {
+	margin: 0 auto;
+	display: block;
+	height: 450px;
 }
